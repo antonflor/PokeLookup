@@ -6,10 +6,10 @@ def load_pokemon_data(file_name):
     id_to_name = {}
     with open(file_name, 'r') as file:
         reader = csv.reader(file)
-        next(reader)  # Skip the header row
+        next(reader)
         for row in reader:
-            if len(row) < 5:  # Ensure the row has at least 5 columns
-                continue  # Skip rows that don't have enough columns
+            if len(row) < 5:
+                continue
             name = row[1].lower()
             id_to_name[row[0]] = row[1]  # Map ID to name
             pokemon_data[name] = {
