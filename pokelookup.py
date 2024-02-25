@@ -1,34 +1,50 @@
-# PokeLookup
+import csv
+import sys
 
-## Description
+def load_pokemon_data(file_name):
+    pokemon_data = {}
+    id_to_name = {}
+    with open(file_name, 'r') as file:
+        reader = csv.reader(file)
+        next(reader)
+        for row in reader:
+            if len(row) < 5:
+                continue
+            name = row[1].lower()
+            id_to_name[row[0]] = row[1]  # Map ID to name
+            pokemon_data[name] = {
+                'ID': row[0],
+                'Name': row[1],
+                'Types': row[2],
+                'Weaknesses': row[3],
+                'Evolution': row[4] if row[4] else ""
+            }
+    return pokemon_data, id_to_name
 
-PokeLookup is a Python script that provides a convenient way to access and display detailed information about Pokémon from a Pokédex CSV. It enables users to search for Pokémon by name and presents key data such as ID, types, weaknesses, and evolutionary stages. This tool is ideal for Pokémon fans, data enthusiasts, and anyone interested in Pokémon statistics.
 
-## Features
+def get_evolution_name(evolution_id, id_to_name):
+    return id_to_name.get(evolution_id, "")
 
-- Search functionality for Pokémon by name
-- Displays essential Pokémon information: ID, types, weaknesses, and evolution
-- User-friendly command-line interface
+def main():
+    if len(sys.argv) != 3:
+        print("Usage: python pokemon-info2.py <pokedex.csv> <pokemon_name>")
+        sys.exit(1)
 
-## Installation
+    file_name = sys.argv[1]
+    pokemon_name = sys.argv[2].lower()
 
-Clone the PokeLookup repository to your local machine using the following command:
+    pokemon_data, id_to_name = load_pokemon_data(file_name)
 
-```
-git clone git@github.com:antonflor/PokeLookup.git
-```
+    if pokemon_name in pokemon_data:
+        pokemon = pokemon_data[pokemon_name]
+        evolution_name = get_evolution_name(pokemon['Evolution'], id_to_name)
+        print(f"ID: {pokemon['ID']}")
+        print(f"Name: {pokemon['Name']}")
+        print(f"Types: {pokemon['Types']}")
+        print(f"Weaknesses: {pokemon['Weaknesses']}")
+        print(f"Evolution: {evolution_name}")
+    else:
+        print("Pokémon not found.")
 
-## Usage
-
-After cloning, navigate to the PokeLookup directory. Run the script using Python 3, ensuring that you have a Pokédex CSV file in the same directory or specify the path to your file.
-
-```
-python3 pokelookup.py pokedex.csv [pokemon_name]
-```
-
-Replace `[pokemon_name]` with the name of the Pokémon you wish to look up.
-
-## Requirements
-
-- Python 3
-- A CSV containing Pokémon data
+if __name__ == "__main__":
+    main()
