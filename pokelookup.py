@@ -11,7 +11,7 @@ def load_pokemon_data(file_name):
             if len(row) < 5:
                 continue
             name = row[1].lower()
-            id_to_name[row[0]] = row[1]  # Map ID to name
+            id_to_name[row[0]] = row[1]
             pokemon_data[name] = {
                 'ID': row[0],
                 'Name': row[1],
